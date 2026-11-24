@@ -19,12 +19,22 @@ body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family
 
 /* hình nền (đổi được) */
 .bg{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 0%,#4a1f3b 0%,#150b12 72%) center/cover no-repeat}
+.bgart{position:absolute;inset:0;width:100%;height:100%;opacity:.85}
+.bg.has-img .bgart{display:none}
 .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(21,11,18,.30),rgba(21,11,18,.60))}
-body.has-bg #intro{background:rgba(21,11,18,.35)}
-body.has-bg #intro svg.scene{display:none}
+body.has-intro #intro svg.scene{display:none}
 
 /* cánh hoa anh đào */
 .petals{position:fixed;inset:0;pointer-events:none;z-index:25;overflow:hidden}
+.petal{pointer-events:auto;cursor:pointer}
+.petal::after{content:"";position:absolute;inset:-14px;border-radius:50%}
+.ghost{position:fixed;z-index:26;pointer-events:none;background:linear-gradient(135deg,#ffe0ec,#ff9fc4);border-radius:150% 0 150% 0;filter:drop-shadow(0 0 6px rgba(255,183,209,.8));animation:ghost .8s cubic-bezier(.2,.6,.3,1) forwards}
+@keyframes ghost{from{opacity:.95;scale:1}to{opacity:0;scale:2.1;filter:blur(3px) drop-shadow(0 0 10px rgba(255,183,209,.8))}}
+.ring{position:fixed;z-index:26;pointer-events:none;width:30px;height:30px;margin:-15px 0 0 -15px;border:1.5px solid rgba(255,200,222,.85);border-radius:50%;animation:ring .8s ease-out forwards}
+@keyframes ring{from{opacity:.8;scale:.3}to{opacity:0;scale:2.4}}
+#petalCount{transition:.2s}
+#petalCount.bump{animation:bump .35s}
+@keyframes bump{40%{transform:scale(1.18);color:var(--accent)}}
 .petal.far{filter:blur(1.5px);opacity:.5}
 .petal.big{filter:blur(2.5px);opacity:.38}
 .petal{position:absolute;top:-30px;width:var(--s);height:calc(var(--s) * .72);background:linear-gradient(135deg,#ffe0ec,#ff9fc4);border-radius:150% 0 150% 0;opacity:.8;animation:fall var(--d) linear infinite;animation-delay:var(--dl);transform:translate3d(0,-5vh,0)}
@@ -47,6 +57,15 @@ body.has-bg #intro svg.scene{display:none}
 /* main */
 main{position:relative;z-index:1;max-width:870px;margin:0 auto;padding:54px 18px 120px;opacity:0;transform:translateY(14px);transition:.8s .2s}
 main.show{opacity:1;transform:none}
+main .card{opacity:0}
+main.show .card{animation:rise .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(34px) scale(.96);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+.intro-in{transition:opacity .55s,transform .7s,filter .6s}
+#intro.leaving .intro-in{opacity:0;transform:scale(1.12);filter:blur(8px)}
+.burst.mini{width:8px;height:5px;margin:-2px 0 0 -4px;animation-duration:1s;animation-timing-function:cubic-bezier(.1,.6,.25,1)}
+.burst{position:fixed;z-index:26;width:14px;height:10px;margin:-5px 0 0 -7px;background:linear-gradient(135deg,#ffe0ec,#ff9fc4);border-radius:150% 0 150% 0;pointer-events:none;animation:burst 1.2s cubic-bezier(.15,.7,.3,1) forwards}
+@keyframes burst{to{transform:translate(var(--bx),var(--by)) rotate(var(--br)) scale(.5);opacity:0}}
+@media (prefers-reduced-motion:reduce){main .card{opacity:1}main.show .card{animation:none}}
 .grid{display:grid;grid-template-columns:1.45fr 1fr;gap:14px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden;position:relative;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .profile{grid-row:span 1}
@@ -81,13 +100,18 @@ main.show{opacity:1;transform:none}
 .rn-row b,.rn-row p{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rn-tag{font-size:.68rem;color:var(--accent);margin-bottom:6px;font-weight:600;letter-spacing:.4px}
 .dash{margin-top:14px;border:1px dashed #5a3a4c;border-radius:14px;padding:14px}
-.dash .ic{width:34px;height:34px;border-radius:50%;background:#35202c;display:grid;place-items:center;margin-bottom:10px}
+.dash .ic{width:34px;height:34px;border-radius:50%;background:#35202c;display:grid;place-items:center;margin-bottom:10px;overflow:hidden}
+.dash .ic svg{width:72%;height:72%;display:block}
+.dash .ic img{width:100%;height:100%;object-fit:cover;display:block}
 .dash b{display:block;font-size:.82rem;margin-bottom:3px}
 .dash p{margin:0;font-size:.78rem;color:var(--muted)}
 .team{display:grid;gap:8px;margin-top:14px}
 .trow{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border:1px solid var(--line);border-radius:12px;color:var(--text);text-decoration:none;font-size:.85rem;font-weight:500;background:rgba(255,183,209,.05);transition:.2s}
 .trow:hover{border-color:var(--accent);transform:translateX(3px)}
 .trow i{font-style:normal;color:var(--accent)}
+.trow span{display:inline-flex;align-items:center;gap:8px}
+.trow.off .ico{filter:grayscale(1)}
+.ico{width:18px;height:18px;border-radius:5px;object-fit:contain;flex:none;display:block}
 .srv{display:flex;gap:12px;align-items:center}
 .srv .logo{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,#6b2f55,#1f0f19);display:grid;place-items:center;font-size:1.3rem}
 .srv b{font-size:.95rem}
@@ -96,7 +120,9 @@ main.show{opacity:1;transform:none}
 .desc{color:var(--muted);font-size:.8rem;margin:14px 0 16px}
 .join{display:block;width:100%;text-align:center;text-decoration:none;padding:11px;border-radius:999px;background:var(--accent);color:var(--accent-ink);font-weight:600;font-size:.85rem}
 .bottom{display:grid;grid-template-columns:1fr 1fr 2.1fr;gap:14px;margin-top:14px}
-.tile .img{height:152px;display:grid;place-items:center;font-size:3rem}
+.tile .img{height:152px;display:grid;place-items:center;font-size:3rem;background-size:cover;background-position:center}
+.banner{object-fit:cover}
+.rn-art.ph{display:grid;place-items:center;font-size:1.7rem}
 .tile .cap{display:flex;gap:12px;align-items:center;padding:14px 16px}
 .tile .cap b{display:block;font-size:.85rem}
 .tile .cap small{color:var(--muted);font-size:.72rem}
@@ -142,7 +168,7 @@ footer b{font-weight:600}
     <circle r="4" fill="#e8467f"/>
   </symbol>
 </defs></svg>
-<div class="bg" id="bg"></div>
+<div class="bg" id="bg"><svg class="bgart" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><filter id="bgblur"><feGaussianBlur stdDeviation="40"/></filter></defs><g filter="url(#bgblur)"><circle cx="300" cy="200" r="220" fill="#ff8fba" opacity=".18"/><circle cx="1350" cy="720" r="260" fill="#ff9fc4" opacity=".14"/><circle cx="900" cy="60" r="180" fill="#c86a9c" opacity=".14"/></g><g fill="none" stroke="#2a1420" stroke-linecap="round"><path d="M1600 110C1480 150 1360 140 1230 232C1180 268 1130 278 1070 255" stroke-width="12"/><path d="M1455 142C1435 198 1410 228 1375 272" stroke-width="6"/><path d="M0 790C90 770 170 710 230 630C262 588 272 548 264 506" stroke-width="12"/><path d="M150 706C190 706 232 726 272 766" stroke-width="5"/></g><use href="#sakura" x="1040" y="226" width="64" height="64"/><use href="#sakura" x="1110" y="170" width="54" height="54"/><use href="#sakura" x="1200" y="214" width="60" height="60"/><use href="#sakura" x="1340" y="250" width="70" height="70"/><use href="#sakura" x="1420" y="70" width="60" height="60"/><use href="#sakura" x="1510" y="40" width="48" height="48"/><use href="#sakura" x="1280" y="100" width="52" height="52"/><use href="#sakura" x="1160" y="120" width="44" height="44"/><use href="#sakura" x="1380" y="160" width="40" height="40"/><use href="#sakura" x="232" y="470" width="58" height="58"/><use href="#sakura" x="120" y="690" width="52" height="52"/><use href="#sakura" x="246" y="740" width="46" height="46"/><use href="#sakura" x="300" y="560" width="40" height="40"/><use href="#sakura" x="180" y="560" width="36" height="36"/><use href="#sakura" x="500" y="600" width="22" height="22" opacity="0.5"/><use href="#sakura" x="1000" y="560" width="26" height="26" opacity="0.5"/><use href="#sakura" x="640" y="120" width="18" height="18" opacity="0.5"/><use href="#sakura" x="820" y="760" width="20" height="20" opacity="0.45"/><use href="#sakura" x="1480" y="500" width="28" height="28" opacity="0.5"/></svg></div>
 <div class="petals" id="petals"></div>
 <!-- Màn hình chào -->
 <section id="intro">
@@ -202,13 +228,7 @@ footer b{font-weight:600}
   <div class="grid">
     <!-- Hồ sơ -->
     <div class="card profile">
-      <svg class="banner" viewBox="0 0 600 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a2d52"/><stop offset=".6" stop-color="#e79bbd"/><stop offset="1" stop-color="#ffd3df"/></linearGradient></defs>
-        <rect width="600" height="170" fill="url(#sky)"/>
-        <g fill="#ffe3ec" opacity=".7"><ellipse cx="120" cy="120" rx="150" ry="26"/><ellipse cx="470" cy="60" rx="150" ry="30"/><ellipse cx="540" cy="110" rx="110" ry="24"/></g>
-        <path d="M300 30a14 14 0 1 0 12 20a11 11 0 1 1-12-20z" fill="#fff4f8"/>
-        <path d="M0 170v-18h60v-20h40v20h120v10h160v-8h100v-14h60v30z" fill="#4a2440" opacity=".85"/>
-      </svg>
+      <svg class="banner" viewBox="0 0 600 170" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a2d52"/><stop offset=".55" stop-color="#e79bbd"/><stop offset="1" stop-color="#ffd3df"/></linearGradient></defs><rect width="600" height="170" fill="url(#sky)"/><circle cx="150" cy="58" r="30" fill="#fff4f8" opacity=".28"/><circle cx="150" cy="58" r="18" fill="#fff4f8" opacity=".4"/><g fill="none" stroke="#4a2440" stroke-linecap="round"><path d="M600 14C520 38 450 30 372 84" stroke-width="7"/><path d="M505 34C495 62 480 80 458 104" stroke-width="4"/><path d="M0 34C44 30 86 52 118 86" stroke-width="5"/></g><use href="#sakura" x="340" y="66" width="36" height="36"/><use href="#sakura" x="398" y="34" width="30" height="30"/><use href="#sakura" x="446" y="2" width="34" height="34"/><use href="#sakura" x="500" y="28" width="26" height="26"/><use href="#sakura" x="448" y="86" width="28" height="28"/><use href="#sakura" x="548" y="0" width="30" height="30"/><use href="#sakura" x="92" y="66" width="30" height="30"/><use href="#sakura" x="48" y="22" width="26" height="26"/><use href="#sakura" x="10" y="12" width="22" height="22"/><use href="#sakura" x="250" y="40" width="13" height="13" opacity="0.75"/><use href="#sakura" x="300" y="110" width="11" height="11" opacity="0.7"/><use href="#sakura" x="210" y="96" width="12" height="12" opacity="0.7"/><use href="#sakura" x="570" y="100" width="12" height="12" opacity="0.75"/><use href="#sakura" x="30" y="100" width="11" height="11" opacity="0.7"/><path d="M0 170v-18h60v-20h40v20h120v10h160v-8h100v-14h60v30z" fill="#4a2440" opacity=".85"/></svg>
       <div class="pbody">
         <div class="avatar" id="avatar">🙂<span class="dot"></span></div>
         <div class="bubble" id="bubble" hidden></div>
@@ -217,10 +237,10 @@ footer b{font-weight:600}
         <div class="meta"><span>📍 Việt Nam</span></div>
         <p class="quote">“want peace, Israel”</p>
         <div class="btns">
-          <a class="pill main" id="dcLink" href="https://discord.com/" target="_blank" rel="noopener">🎮 Discord</a>
-          <a class="pill" href="https://github.com/3z03" target="_blank" rel="noopener">⌥ GitHub</a>
-          <a class="pill" href="https://steamcommunity.com/profiles/76561199414714522/" target="_blank" rel="noopener">🕹️ Steam</a>
-          <a class="pill" href="https://www.facebook.com/demthanhpho" target="_blank" rel="noopener">📘 Facebook</a>
+          <a class="pill main" id="dcLink" href="https://discord.com/" target="_blank" rel="noopener"><img class="ico" src="icons/discord.svg" alt="" onerror="this.remove()"> Discord</a>
+          <a class="pill" href="https://github.com/3z03" target="_blank" rel="noopener"><img class="ico" src="icons/github.svg" alt="" onerror="this.remove()"> GitHub</a>
+          <a class="pill" href="https://steamcommunity.com/profiles/76561199414714522/" target="_blank" rel="noopener"><img class="ico" src="icons/steam.svg" alt="" onerror="this.remove()"> Steam</a>
+          <a class="pill" href="https://www.facebook.com/demthanhpho" target="_blank" rel="noopener"><img class="ico" src="icons/facebook.svg" alt="" onerror="this.remove()"> Facebook</a>
         </div>
       </div>
     </div>
@@ -229,17 +249,17 @@ footer b{font-weight:600}
       <div class="card pad">
         <div class="row"><b>Right now</b><span class="status" id="stText">Idle on Discord</span></div>
         <div class="dash" id="rn">
-          <div class="ic">☾</div>
-          <b>Đang nghỉ ngơi</b>
-          <p>Khi mình chơi game hay nghe nhạc, nó sẽ hiện ở đây.</p>
+          <div class="ic"><svg viewBox="-50 -50 100 100" aria-hidden="true"><use href="#sakura" x="-50" y="-50" width="100" height="100"/></svg></div>
+          <b>Blooming quietly 🌸</b>
+          <p>Taking a break. When I'm gaming or listening to music, it'll show up here.</p>
         </div>
       </div>
       <div class="card pad">
         <b style="font-size:.9rem">GayGang Gaming</b>
         <div class="team">
-          <a class="trow" href="https://www.facebook.com/profile.php?id=61596144776919" target="_blank" rel="noopener"><span>📘 facebook</span><i>↗</i></a>
-          <a class="trow" href="https://www.tiktok.com/@gaygang36" target="_blank" rel="noopener"><span>🎵 tiktok</span><i>↗</i></a>
-          <div class="trow off"><span>💬 <s>discord</s></span></div>
+          <a class="trow" href="https://www.facebook.com/profile.php?id=61596144776919" target="_blank" rel="noopener"><span><img class="ico" src="icons/facebook.svg" alt="" onerror="this.remove()"> Facebook</span><i>↗</i></a>
+          <a class="trow" href="https://www.tiktok.com/@gaygang36" target="_blank" rel="noopener"><span><img class="ico" src="icons/tiktok.svg" alt="" onerror="this.remove()"> Tiktok</span><i>↗</i></a>
+          <div class="trow off"><span><img class="ico" src="icons/discord.svg" alt="" onerror="this.remove()"> <s>Discord</s></span></div>
         </div>
       </div>
     </div>
@@ -247,12 +267,12 @@ footer b{font-weight:600}
 
   <div class="bottom">
     <div class="card tile">
-      <div class="img" style="background:linear-gradient(135deg,#5a2a48,#b8628c)">🎮</div>
+      <div class="img" id="gameImg" style="background:linear-gradient(135deg,#5a2a48,#b8628c)">🎮</div>
       <div class="cap">🕹️<div><b>Gaming</b><small>FPS, Open World</small></div></div>
     </div>
     <div class="card tile">
-      <div class="img" style="background:linear-gradient(135deg,#4a2540,#93507a)">🎧</div>
-      <div class="cap">🎵<div><b>Nghe nhạc</b><small>Indie, V-Pop</small></div></div>
+      <div class="img" id="musicImg" style="background:linear-gradient(135deg,#4a2540,#93507a)">🎧</div>
+      <div class="cap">🎵<div><b>Music</b><small>Indie, V-Pop</small></div></div>
     </div>
     <div class="card skills">
       <b>Skills</b>
@@ -265,7 +285,7 @@ footer b{font-weight:600}
     </div>
   </div>
 
-  <footer><span class="mono" id="views">👁 — lượt xem</span><span class="mono"><b id="clock">--:--:--</b> GMT+7</span></footer>
+  <footer><span class="mono" id="petalCount" title="Bấm vào những cánh hoa đang rơi!">🌸 Bấm vào cánh hoa rơi để bắt!</span><span class="mono"><b id="clock">--:--:--</b> GMT+7</span></footer>
 </main>
 
 <!-- Trình phát nhạc -->
@@ -282,7 +302,14 @@ var SYNC_DISCORD = true;                // true = tự lấy tên, avatar, @user
 var DISCORD_ID = "957879740457447475";                   // ID số Discord của bạn (xem hướng dẫn bên dưới); để trống = không bật trạng thái thật
 var MUSIC_SRC = "src/music/dem-thanh-pho.mp3";                    // đường dẫn file mp3 của bạn, ví dụ "nhac.mp3"
 var FAVICON_SPIN = true;              // true = hoa anh đào ở tab trình duyệt xoay nhẹ; false = đứng yên
-var BG_IMAGE = "";                     // ảnh nền mặc định (đường dẫn hoặc link), ví dụ "nen.jpg"; để trống = nền hồng mặc định
+// --- Hình ảnh (đường dẫn file cùng thư mục hoặc link; để trống "" = dùng hình hồng mặc định) ---
+var INTRO_IMAGE  = "";                 // ảnh nền MÀN HÌNH CHỜ (trước khi bấm Open), ví dụ "cho.jpg"
+var BG_IMAGE     = "";                 // ảnh nền SAU KHI BẤM Open (trang chính), ví dụ "nen.jpg"
+var BANNER_IMAGE = "";                 // ảnh bìa của thẻ hồ sơ, ví dụ "bia.jpg"
+var AVATAR_IMAGE = "";                 // ảnh avatar/icon; nếu điền sẽ thay avatar Discord, ví dụ "avatar.png"
+var GAMING_IMAGE = "";                 // ảnh ô Gaming, ví dụ "game.jpg"
+var IDLE_ICON    = "";                 // ảnh thay cho mặt trăng ở ô "Right now" khi đang nghỉ ngơi, ví dụ "nghi.png"
+var MUSIC_IMAGE  = "";                 // ảnh ô Music, ví dụ "nhac.jpg"
 // =============================
 
 // cánh hoa anh đào rơi
@@ -316,11 +343,32 @@ var BG_IMAGE = "";                     // ảnh nền mặc định (đường d
 
 // ====== HÌNH NỀN ======
 var bgEl = document.getElementById('bg');
-function setBg(url){
-  bgEl.style.backgroundImage = url ? 'url("' + String(url).replace(/"/g, '%22') + '")' : '';
-  document.body.classList.toggle('has-bg', !!url);
+function cssUrl(u){ return 'url("' + String(u).replace(/"/g, '%22') + '")'; }
+if (BG_IMAGE) { bgEl.style.backgroundImage = cssUrl(BG_IMAGE); bgEl.classList.add('has-img'); }
+
+// ảnh màn hình chờ
+if (INTRO_IMAGE) {
+  var introEl = document.getElementById('intro');
+  introEl.style.backgroundImage = 'linear-gradient(rgba(21,11,18,.35),rgba(21,11,18,.55)), ' + cssUrl(INTRO_IMAGE);
+  introEl.style.backgroundSize = 'cover';
+  introEl.style.backgroundPosition = 'center';
+  document.body.classList.add('has-intro');
 }
-setBg(BG_IMAGE);
+// ảnh bìa
+if (BANNER_IMAGE) {
+  var bnSvg = document.querySelector('svg.banner'), bnImg = new Image();
+  bnImg.className = 'banner'; bnImg.alt = '';
+  bnImg.onload = function(){ if (bnSvg.parentNode) bnSvg.replaceWith(bnImg); };
+  bnImg.src = BANNER_IMAGE;
+}
+// avatar/icon
+if (AVATAR_IMAGE) document.getElementById('avatar').innerHTML = '<img alt="" src="' + AVATAR_IMAGE.replace(/"/g, '%22') + '"><span class="dot"></span>';
+// ảnh ô Gaming và Music
+[['gameImg', GAMING_IMAGE], ['musicImg', MUSIC_IMAGE]].forEach(function(x){
+  if (!x[1]) return;
+  var el = document.getElementById(x[0]);
+  el.style.backgroundImage = cssUrl(x[1]); el.textContent = '';
+});
 
 var intro = document.getElementById('intro'), main = document.getElementById('main'),
     player = document.getElementById('player'), audio = document.getElementById('audio'),
@@ -333,9 +381,32 @@ function setPlaying(p){
   if (MUSIC_SRC) { try { p ? audio.play() : audio.pause(); } catch(e){} }
 }
 if (MUSIC_SRC) audio.src = MUSIC_SRC;
+audio.volume = 0.3;
 
 document.getElementById('open').addEventListener('click', function(){
-  intro.classList.add('hide');
+  var r = this.getBoundingClientRect(), x = r.left + r.width / 2, y = r.top + r.height / 2;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) {
+    intro.classList.add('hide');
+  } else {
+    // 1) nổ một vòng cánh hoa từ nút bấm
+    for (var i = 0; i < 28; i++) {
+      var b = document.createElement('i'), ang = Math.random() * Math.PI * 2, dist = 120 + Math.random() * 360;
+      b.className = 'burst';
+      b.style.cssText = 'left:' + x + 'px;top:' + y + 'px;--bx:' + (Math.cos(ang) * dist).toFixed(0) + 'px;--by:' + (Math.sin(ang) * dist - 60).toFixed(0) + 'px;--br:' + (Math.random() * 720 - 360).toFixed(0) + 'deg';
+      document.body.appendChild(b);
+      setTimeout((function(el){ return function(){ el.remove(); }; })(b), 1300);
+    }
+    // 2) chữ phóng to mờ dần, màn hình chờ co lại thành vòng tròn quanh nút bấm
+    intro.classList.add('leaving');
+    intro.style.clipPath = 'circle(150% at ' + x + 'px ' + y + 'px)';
+    void intro.offsetWidth;
+    intro.style.transition = 'clip-path 1.1s cubic-bezier(.7,0,.2,1)';
+    intro.style.clipPath = 'circle(0px at ' + x + 'px ' + y + 'px)';
+    setTimeout(function(){ intro.classList.add('hide'); }, 1150);
+  }
+  // 3) trang chính hiện ra, từng thẻ trượt lên lần lượt
+  document.querySelectorAll('main .card').forEach(function(c, k){ c.style.animationDelay = (0.3 + k * 0.1).toFixed(2) + 's'; });
   main.classList.add('show');
   player.classList.add('show');
   setPlaying(true);
@@ -355,11 +426,35 @@ if (DISCORD_ID) document.getElementById('dcLink').href = 'https://discord.com/us
 //           3) dán ID vào biến DISCORD_ID ở trên
 // Lưu ý: chỉ hoạt động khi trang chạy trên hosting của bạn (GitHub Pages, Netlify, Vercel...).
 var rn = document.getElementById('rn'), stText = document.getElementById('stText');
-var IDLE_HTML = '<div class="ic">☾</div><b>Đang nghỉ ngơi</b><p>Khi mình chơi game hay nghe nhạc, nó sẽ hiện ở đây.</p>';
+var SAKURA_SVG = '<svg viewBox="-50 -50 100 100" aria-hidden="true"><use href="#sakura" x="-50" y="-50" width="100" height="100"/></svg>';
+var IDLE_ICON_HTML = IDLE_ICON ? '<img alt="" src="' + IDLE_ICON.replace(/"/g, '%22') + '" onerror="this.outerHTML=SAKURA_SVG">' : SAKURA_SVG;
+var IDLE_HTML = '<div class="ic">' + IDLE_ICON_HTML + '</div><b>Blooming quietly 🌸</b><p>Taking a break. When I\'m gaming or listening to music, it\'ll show up here.</p>';
 rn.innerHTML = IDLE_HTML;
 var COLORS = {online:'#3ddc84', idle:'#ffb830', dnd:'#ff5d6c', offline:'#747487'};
 var LABELS = {online:'Online on Discord', idle:'Idle on Discord', dnd:'Do not disturb', offline:'Offline'};
 var lastAvKey = '', lastPresence = null, bubbleEl = document.getElementById('bubble');
+
+// icon của hoạt động Discord (ảnh lớn của game/app), nếu không có thì thử lấy icon ứng dụng
+var appIcons = {};
+function actImg(a){
+  var as = a.assets || {}, im = as.large_image || as.small_image;
+  if (im) {
+    if (im.indexOf('mp:external/') === 0) return 'https://media.discordapp.net/external/' + im.slice(12);
+    if (im.indexOf('mp:') === 0) return 'https://media.discordapp.net/' + im.slice(3);
+    if (im.indexOf('spotify:') === 0) return 'https://i.scdn.co/image/' + im.slice(8);
+    if (im.indexOf('youtube:') === 0) return 'https://i.ytimg.com/vi/' + im.slice(8) + '/hqdefault.jpg';
+    if (a.application_id) return 'https://cdn.discordapp.com/app-assets/' + a.application_id + '/' + im + '.png';
+  }
+  var id = a.application_id;
+  if (id && !(id in appIcons)) {
+    appIcons[id] = '';
+    fetch('https://discord.com/api/v10/applications/' + id + '/rpc').then(function(r){ return r.json(); }).then(function(j){
+      if (j && j.icon) { appIcons[id] = 'https://cdn.discordapp.com/app-icons/' + id + '/' + j.icon + '.png?size=128'; if (lastPresence) renderPresence(lastPresence); }
+    }).catch(function(){});
+  }
+  return (id && appIcons[id]) || '';
+}
+var ACT_TAGS = {0:'🎮 ĐANG CHƠI', 1:'📡 ĐANG PHÁT TRỰC TIẾP', 3:'📺 ĐANG XEM', 5:'🏆 THI ĐẤU'};
 
 function esc(s){
   return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
@@ -385,7 +480,7 @@ function renderPresence(d){
       if (key !== lastAvKey) {
         lastAvKey = key;
         document.getElementById('avatar').innerHTML =
-          '<img alt="" src="https://cdn.discordapp.com/avatars/' + esc(u.id) + '/' + esc(u.avatar) + (String(u.avatar).indexOf('a_') === 0 ? '.gif' : '.png') + '?size=256">' +
+          '<img alt="" src="' + (AVATAR_IMAGE ? esc(AVATAR_IMAGE) : 'https://cdn.discordapp.com/avatars/' + esc(u.id) + '/' + esc(u.avatar) + (String(u.avatar).indexOf('a_') === 0 ? '.gif' : '.png') + '?size=256') + '">' +
           (dec ? '<img class="deco" alt="" src="https://cdn.discordapp.com/avatar-decoration-presets/' + esc(dec) + '.png?size=256&passthrough=true">' : '') +
           '<span class="dot"></span>';
       }
@@ -407,7 +502,7 @@ function renderPresence(d){
     bubbleEl.textContent = csText;
     bubbleEl.hidden = !csText;
   }
-  var game = acts.filter(function(a){ return a.type === 0; })[0];
+  var game = acts.filter(function(a){ return a.type === 0; })[0] || acts.filter(function(a){ return a.type === 1 || a.type === 3 || a.type === 5; })[0];
   var custom = acts.filter(function(a){ return a.type === 4; })[0];
 
   if (d.listening_to_spotify && d.spotify) {
@@ -416,8 +511,11 @@ function renderPresence(d){
       '<img class="rn-art" alt="" src="' + esc(sp.album_art_url) + '"><div><b>' + esc(sp.song) + '</b><p>' + esc(sp.artist) + '</p></div></div>';
   } else if (game) {
     var line = [game.details, game.state].filter(Boolean).map(esc).join(' · ');
-    var time = game.timestamps && game.timestamps.start ? 'Đã chơi ' + elapsed(game.timestamps.start) : '';
-    rn.innerHTML = '<div class="rn-tag">🎮 ĐANG CHƠI</div><div class="rn-row"><div><b>' + esc(game.name) + '</b>' +
+    var time = game.timestamps && game.timestamps.start ? 'Đã ' + (game.type === 0 ? 'chơi ' : 'xem ') + elapsed(game.timestamps.start) : '';
+    var gimg = actImg(game);
+    rn.innerHTML = '<div class="rn-tag">' + (ACT_TAGS[game.type] || ACT_TAGS[0]) + '</div><div class="rn-row">' +
+      (gimg ? '<img class="rn-art" alt="" src="' + esc(gimg) + '" onerror="this.outerHTML=\'<div class=&quot;rn-art ph&quot;>🎮</div>\'">' : '<div class="rn-art ph">🎮</div>') +
+      '<div><b>' + esc(game.name) + '</b>' +
       (line ? '<p>' + line + '</p>' : '') + (time ? '<p>' + time + '</p>' : '') + '</div></div>';
   } else if (custom && (custom.state || custom.emoji)) {
     rn.innerHTML = '<div class="rn-tag">💬 TRẠNG THÁI</div><div class="rn-row"><div><b>' +
@@ -447,21 +545,43 @@ if (DISCORD_ID) {
   setInterval(function(){ if (lastPresence) renderPresence(lastPresence); }, 30000);
 }
 
-// ====== LƯỢT XEM PROFILE (CounterAPI) ======
-// Mỗi trình duyệt chỉ được tính 1 lượt (lưu cờ trong localStorage). Đổi VIEW_NS nếu muốn bộ đếm riêng.
-var VIEW_NS = "hayuna-profile-" + (DISCORD_ID || "demo");
+// ====== ĐẾM CÁNH HOA BẮT ĐƯỢC (lưu trên trình duyệt, không dùng dịch vụ ngoài) ======
 (function(){
-  var el = document.getElementById('views'), seen = false;
-  try { seen = localStorage.getItem('viewed') === '1'; } catch(e){}
-  fetch('https://api.counterapi.dev/v1/' + encodeURIComponent(VIEW_NS) + '/views' + (seen ? '' : '/up'))
-    .then(function(r){ return r.json(); })
-    .then(function(j){
-      var n = j.count != null ? j.count : (j.value != null ? j.value : (j.data && j.data.up_count));
-      if (typeof n !== 'number') throw 0;
-      el.textContent = '👁 ' + n.toLocaleString('vi-VN') + ' lượt xem';
-      try { localStorage.setItem('viewed', '1'); } catch(e){}
-    })
-    .catch(function(){ el.style.visibility = 'hidden'; });
+  var box = document.getElementById('petals'), label = document.getElementById('petalCount'), n = 0;
+  try { n = parseInt(localStorage.getItem('petalsCaught'), 10) || 0; } catch(e){}
+  function show(){ if (n > 0) label.textContent = '🌸 Đã bắt ' + n.toLocaleString('vi-VN') + ' cánh hoa'; }
+  function drop(el, ms){ setTimeout(function(){ el.remove(); }, ms); }
+  show();
+  box.addEventListener('click', function(e){
+    var el = e.target.closest ? e.target.closest('.petal') : null;
+    if (!el) return;
+    // vị trí và độ nghiêng hiện tại của cánh hoa
+    var rc = el.getBoundingClientRect(), cx = rc.left + rc.width / 2, cy = rc.top + rc.height / 2;
+    var mt = getComputedStyle(el).transform, ang = 0;
+    if (mt && mt !== 'none') { var v = mt.match(/-?[\d.]+(?:e-?\d+)?/g); if (v && v.length >= 2) ang = Math.atan2(parseFloat(v[1]), parseFloat(v[0])); }
+    // 1) cánh hoa "ma" nở nhẹ và tan ngay tại chỗ
+    var g = document.createElement('i');
+    g.className = 'ghost';
+    g.style.cssText = 'left:' + (cx - el.offsetWidth / 2) + 'px;top:' + (cy - el.offsetHeight / 2) + 'px;width:' + el.offsetWidth + 'px;height:' + el.offsetHeight + 'px;transform:rotate(' + ang + 'rad)';
+    document.body.appendChild(g); drop(g, 900);
+    // 2) vòng sáng lan ra
+    var ring = document.createElement('i');
+    ring.className = 'ring'; ring.style.left = cx + 'px'; ring.style.top = cy + 'px';
+    document.body.appendChild(ring); drop(ring, 900);
+    // 3) vài cánh hoa nhỏ bay ra nhẹ nhàng
+    for (var k = 0; k < 8; k++) {
+      var m = document.createElement('i'), a2 = Math.random() * 6.283, dist = 26 + Math.random() * 34;
+      m.className = 'burst mini';
+      m.style.cssText = 'left:' + cx + 'px;top:' + cy + 'px;--bx:' + (Math.cos(a2) * dist).toFixed(0) + 'px;--by:' + (Math.sin(a2) * dist).toFixed(0) + 'px;--br:' + (Math.random() * 300 - 150).toFixed(0) + 'deg';
+      document.body.appendChild(m); drop(m, 1100);
+    }
+    // cánh hoa thật quay lại rơi từ trên xuống
+    el.style.setProperty('--dl', '0s');
+    el.style.animation = 'none'; void el.offsetWidth; el.style.animation = '';
+    n++; show();
+    try { localStorage.setItem('petalsCaught', String(n)); } catch(x){}
+    label.classList.remove('bump'); void label.offsetWidth; label.classList.add('bump');
+  });
 })();
 
 // đồng hồ GMT+7
